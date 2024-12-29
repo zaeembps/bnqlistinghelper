@@ -1,26 +1,24 @@
 from flask import Flask, render_template, request
 import pandas as pd
-from fuzzywuzzy import fuzz, process
+from fuzzywuzzy import fuzz
+from flask_sslify import SSLify  # Added for HTTPS redirection
 import webbrowser
 import threading
 import time
-import os
 
 app = Flask(__name__, template_folder="templates")
+sslify = SSLify(app)  # Enforce HTTPS
 
-# Get the base directory of the current script
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-
-# Load the product data from the CSV file (first file)
-df = pd.read_csv(os.path.join(BASE_DIR, "product_list.csv"), header=None, names=["Product Type", "Product Code"])
+# Load the product data from the CSV file
+df = pd.read_csv("product_list.csv", header=None, names=["Product Type", "Product Code"])
 df["Product Type"] = df["Product Type"].astype(str).str.strip()
 
 # Load the category tree data from the second file
-category_df = pd.read_csv(os.path.join(BASE_DIR, "category_tree.csv"), header=None, names=["Category Tree", "Code"])
+category_df = pd.read_csv("category_tree.csv", header=None, names=["Category Tree", "Code"])
 category_df["Category Tree"] = category_df["Category Tree"].astype(str).str.strip()
 
 # Path to the item_specs.xlsx file
-item_specs_file = os.path.join(BASE_DIR, "item_specs.xlsx")
+item_specs_file = "item_specs.xlsx"
 
 def expand_synonyms(text):
     SYNONYMS = {
@@ -90,6 +88,12 @@ def get_category_tree_by_name(product_name, n=10, method="combined"):
     return top_matches.values.tolist()
 
 def get_item_specs(category_code):
+    """
+    Searches for the given category_code in the 'Category' column of item_specs.xlsx
+    and retrieves matching rows from 'Display Name of Field', 'Requirement Level', 'Data Type', 'Description',
+    and 'Allowed Value Names'.
+    """
+    # Load the main sheet (Custom Template File)
     custom_template_df = pd.read_excel(item_specs_file, sheet_name="Custom Template File", usecols=[
         "Display Name of Field", "Category", "Requirement Level", "Data Type", "Description", "Allowed Values"
     ])
@@ -170,6 +174,4 @@ def item_specs():
     return render_template('item_specs.html', specs=specs, category_code=selected_category_code)
 
 if __name__ == '__main__':
-    # Use the PORT provided by Heroku
-    port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port=port, debug=True)
+    app.run(debug=True, use_reloader=True, host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
