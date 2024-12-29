@@ -4,19 +4,23 @@ from fuzzywuzzy import fuzz, process
 import webbrowser
 import threading
 import time
+import os
 
-app = Flask(__name__, template_folder=r"D:\Documents\templates")
+app = Flask(__name__, template_folder="templates")
+
+# Get the base directory of the current script
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # Load the product data from the CSV file (first file)
-df = pd.read_csv(r"C:\Users\Zaeem\product_list.csv", header=None, names=["Product Type", "Product Code"])
+df = pd.read_csv(os.path.join(BASE_DIR, "product_list.csv"), header=None, names=["Product Type", "Product Code"])
 df["Product Type"] = df["Product Type"].astype(str).str.strip()
 
 # Load the category tree data from the second file
-category_df = pd.read_csv(r"C:\Users\Zaeem\category_tree.csv", header=None, names=["Category Tree", "Code"])
+category_df = pd.read_csv(os.path.join(BASE_DIR, "category_tree.csv"), header=None, names=["Category Tree", "Code"])
 category_df["Category Tree"] = category_df["Category Tree"].astype(str).str.strip()
 
 # Path to the item_specs.xlsx file
-item_specs_file = r"C:\Users\Zaeem\item_specs.xlsx"
+item_specs_file = os.path.join(BASE_DIR, "item_specs.xlsx")
 
 def expand_synonyms(text):
     SYNONYMS = {
