@@ -90,12 +90,6 @@ def get_category_tree_by_name(product_name, n=10, method="combined"):
     return top_matches.values.tolist()
 
 def get_item_specs(category_code):
-    """
-    Searches for the given category_code in the 'Category' column of item_specs.xlsx
-    and retrieves matching rows from 'Display Name of Field', 'Requirement Level', 'Data Type', 'Description',
-    and 'Allowed Value Names'.
-    """
-    # Load the main sheet (Custom Template File)
     custom_template_df = pd.read_excel(item_specs_file, sheet_name="Custom Template File", usecols=[
         "Display Name of Field", "Category", "Requirement Level", "Data Type", "Description", "Allowed Values"
     ])
@@ -176,9 +170,6 @@ def item_specs():
     return render_template('item_specs.html', specs=specs, category_code=selected_category_code)
 
 if __name__ == '__main__':
-    def open_browser():
-        time.sleep(1)
-        webbrowser.open_new('http://127.0.0.1:5000/')
-
-    threading.Thread(target=open_browser).start()
-    app.run(debug=True)
+    # Use the PORT provided by Heroku
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port, debug=True)
