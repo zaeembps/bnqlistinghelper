@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>BNQ Listing Helper</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .instructions {
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            margin-top: 20px;
+        }
+        .steps {
+            padding: 0;
+            list-style-type: none;
+        }
+        .steps li {
+            margin-bottom: 10px;
+        }
+        .flow-diagram iframe {
+            border: none;
+            display: block;
+            margin: 0 auto;
+        }
+        .method-description {
+            font-size: 0.9em;
+            color: #555;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>BNQ Listing Helper</h1>
+
+    <!-- Search Box -->
+    <form action="/search" method="POST">
+        <label for="query">Enter your search:</label>
+        <input type="text" name="query" id="query" required><br><br>
+
+        <label for="num_results">Number of results:</label>
+        <input type="number" name="num_results" id="num_results" value="10" min="1" max="100"><br><br>
+
+        <label for="fuzzy_method">Search method:</label>
+        <select name="fuzzy_method" id="fuzzy_method">
+            <option value="combined" selected>Combined (recommended)</option>
+            <option value="partial">Partial</option>
+            <option value="token">Token</option>
+        </select>
+        <div class="method-description">
+            <p><strong>Combined:</strong> Best choice. Finds the most accurate results by using all matching methods.</p>
+            <p><strong>Partial:</strong> Looks for results that contain part of the product name.</p>
+            <p><strong>Token:</strong> Finds matches even if the words are in a different order.</p>
+        </div>
+        <br>
+        <input type="submit" value="Search">
+    </form>
+
+    <!-- Instructions -->
+    <div class="instructions">
+        <h2>How to Use This Tool</h2>
+        <p>This tool is designed to help you easily list items on the BNQ Marketplace. Follow the steps below:</p>
+        <ul class="steps">
+            <li><strong>Enter the Product Name:</strong> Use the search box above to type the product name.</li>
+            <li><strong>Select Product Code:</strong> Review the search results and choose the correct product code that matches your item.</li>
+            <li><strong>Match Category Tree:</strong> Use the selected product code to find the most appropriate category tree for your product.</li>
+            <li><strong>Retrieve Item Specifications:</strong> Once a category is selected, retrieve item specifications such as required fields and data types.</li>
+            <li><strong>Complete Listing:</strong> Use the gathered information to finalize your product listing on the BNQ Marketplace.</li>
+        </ul>
+    </div>
+
+    <!-- Flowchart -->
+    <div class="flow-diagram">
+        <h2>Process Flow</h2>
+        <p>The diagram below illustrates the step-by-step process:</p>
+        <iframe src="{{ url_for('static', filename='flow_diagram.pdf') }}" width="80%" height="720px">
+            Your browser does not support PDFs. 
+            <a href="{{ url_for('static', filename='flow_diagram.pdf') }}">Download the PDF</a>
+        </iframe>
+    </div>
+</body>
+</html>

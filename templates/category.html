@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Category Tree</title>
+</head>
+<body>
+    <h2>Category Tree Results</h2>
+    <p><strong>Selected Product Name:</strong> {{ selected_name }}</p>
+
+    <form action="/category" method="POST">
+        <input type="hidden" name="selected_name" value="{{ selected_name }}">
+
+        <label for="category_fuzzy_method">Search Method:</label>
+        <select name="category_fuzzy_method" id="category_fuzzy_method">
+            <option value="combined" {% if category_fuzzy_method == 'combined' %}selected{% endif %}>Combined</option>
+            <option value="partial" {% if category_fuzzy_method == 'partial' %}selected{% endif %}>Partial</option>
+            <option value="token" {% if category_fuzzy_method == 'token' %}selected{% endif %}>Token</option>
+        </select>
+        <br><br>
+
+        <label for="num_category_results">Number of Outcomes:</label>
+        <input type="number" name="num_category_results" id="num_category_results" value="{{ num_category_results }}" min="1" max="50">
+        <br><br>
+
+        <button type="submit">Refine Results</button>
+    </form>
+    <hr>
+
+    {% if category_matches %}
+        <form action="/item_specs" method="POST">
+            <table border="1" cellpadding="5">
+                <thead>
+                    <tr>
+                        <th>Category Tree</th>
+                        <th>Category Code</th>
+                        <th>Match Score</th>
+                        <th>Select</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for match in category_matches %}
+                    <tr>
+                        <td>{{ match[0] }}</td>
+                        <td>{{ match[1] }}</td>
+                        <td>{{ match[2] }}%</td>
+                        <td>
+                            <input type="radio" name="selected_category_code" value="{{ match[1] }}" required>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <br>
+            <input type="submit" value="Get Item Specs">
+        </form>
+    {% else %}
+        <p>No matching category trees found for: {{ selected_name }}</p>
+    {% endif %}
+</body>
+</html>

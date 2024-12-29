@@ -1,0 +1,17 @@
+<form action="/filter_category" method="POST">
+    <h2>Refine Your Category</h2>
+    <input type="hidden" name="base_category" value="{{ base_category }}">
+
+    {% for attr, options in dynamic_attributes.items() %}
+    <label for="attribute_{{ attr }}">{{ attr }}:</label>
+    <select name="attribute_{{ attr }}" id="attribute_{{ attr }}">
+        <option value="">Select...</option>
+        {% for option in options %}
+        <option value="{{ option }}">{{ option }}</option>
+        {% endfor %}
+    </select>
+    <br><br>
+    {% endfor %}
+
+    <input type="submit" value="Filter">
+</form>

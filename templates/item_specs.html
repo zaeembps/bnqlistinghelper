@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Item Specifications</title>
+    <style>
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            width: 50%;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        .modal-header {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+        }
+    </style>
+    <script>
+        function openModal(rowId) {
+            const modal = document.getElementById(`modal-${rowId}`);
+            modal.style.display = "flex";
+        }
+        function closeModal(rowId) {
+            const modal = document.getElementById(`modal-${rowId}`);
+            modal.style.display = "none";
+        }
+    </script>
+</head>
+<body>
+    <h2>Item Specifications</h2>
+    <p><strong>Category Code:</strong> {{ category_code }}</p>
+    {% if specs %}
+        <table border="1" cellpadding="5">
+            <thead>
+                <tr>
+                    <th>Display Name of Field</th>
+                    <th>Requirement Level</th>
+                    <th>Data Type</th>
+                    <th>Info</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for spec in specs %}
+                <tr>
+                    <td>{{ spec[0] }}</td>
+                    <td>{{ spec[1] }}</td>
+                    <td>{{ spec[2] }}</td>
+                    <td>
+                        <button onclick="openModal({{ loop.index }})">Info</button>
+                        <div id="modal-{{ loop.index }}" class="modal">
+                            <div class="modal-content">
+                                <span class="close" onclick="closeModal({{ loop.index }})">&times;</span>
+                                <div class="modal-header">Details</div>
+                                <p><strong>Description:</strong> {{ spec[3] }}</p>
+                                {% if spec[4] %}
+                                <p><strong>Allowed Values:</strong></p>
+                                <ul>
+                                    {% for value in spec[4] %}
+                                    <li>{{ value }}</li>
+                                    {% endfor %}
+                                </ul>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No item specifications found for category code: {{ category_code }}</p>
+    {% endif %}
+    <br>
+    <form action="/" method="get">
+        <button type="submit">Start Over</button>
+    </form>
+</body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Search Results</title>
+</head>
+<body>
+    <h2>Search Results</h2>
+    <form action="/category" method="POST">
+        <table border="1" cellpadding="5">
+            <thead>
+                <tr>
+                    <th>Product Type</th>
+                    <th>Product Code</th>
+                    <th>Score</th>
+                    <th>Select</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for result in results %}
+                <tr>
+                    <td>{{ result[0] }}</td>
+                    <td>{{ result[1] }}</td>
+                    <td>{{ result[2] }}</td>
+                    <td>
+                        <input type="radio" name="selected_name" value="{{ result[0] }}" required>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <br>
+        <input type="submit" value="Get Category Tree">
+    </form>
+</body>
+</html>
